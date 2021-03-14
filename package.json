@@ -1,0 +1,34 @@
+{
+  "name": "react-typescript-tailwind-parcel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^16.9.9",
+    "@types/react-dom": "^16.9.2",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-purgecss": "^2.1.3",
+    "tailwindcss": "^1.1.2",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "@types/react-router-dom": "^5.1.7",
+    "country-state-city": "^2.0.0",
+    "linq-typescript": "^1.0.251",
+    "nanostyled": "^0.3.1",
+    "picostyle-react": "0.0.1",
+    "query-string": "^6.14.1",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-router-dom": "^5.2.0",
+    "react-sweet-state": "^2.5.2"
+  }
+}
