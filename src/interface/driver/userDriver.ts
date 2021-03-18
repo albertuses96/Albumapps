@@ -1,3 +1,5 @@
+import { Photo } from "../../domain/photo";
+
 export default interface UserDriver {
   getAll(): Promise<User[]>;
 }
@@ -30,4 +32,5 @@ export interface User {
   phone: string;
   website: string;
   company: Company;
+  favorites: Photo[] | null
 }

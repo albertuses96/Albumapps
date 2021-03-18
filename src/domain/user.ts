@@ -1,4 +1,5 @@
 import { User as UserDomain, Address, Company } from '../interface/driver/userDriver'
+import { Photo } from './photo';
 
 export class User {
   id: number;
@@ -9,6 +10,7 @@ export class User {
   phone: string;
   website: string;
   company: Company;
+  favorites: Photo[] | null
 
   constructor(userData: UserDomain) {
    this.id = userData.id
@@ -19,5 +21,6 @@ export class User {
    this.phone = userData.phone
    this.website = userData.website
    this.company = userData.company
+   this.favorites = userData.favorites
   }
 }

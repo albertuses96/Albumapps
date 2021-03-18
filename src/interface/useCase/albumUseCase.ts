@@ -1,5 +1,9 @@
-import { Album } from "../../domain/album";
+import { Album, AlbumData } from "../../domain/album";
+import { Photo } from "../../domain/photo";
+import { User } from "../../domain/user";
 
 export interface AlbumUseCase {
-  getAll(): Promise<Album[]>;
+  getAll(users: User[], photos: Photo[]): Promise<AlbumData[]>;
+  searchByAlbumsName(query: string, list: Album[]): Album[];
+  searchByUserName(user: User[], list: Album[]): Album[]
 }
