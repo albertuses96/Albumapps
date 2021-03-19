@@ -32,7 +32,10 @@ export default class AlbumUseCaseImpl implements AlbumUseCase {
         (
           { 
             ...album, 
-            user: user, 
+            user: {
+              ...user,
+              favorites: null
+            }, 
             photos: photoList.Where((photo: any) => photo.albumId === album.id).ToArray() 
           }
         )
