@@ -38,7 +38,6 @@ const PhotoItem: React.FC<{data: Photo, index: number, albumData: AlbumData, set
   }
 
   const handleLikePhoto = () => {
-    const isHasFavorites = albumData.user.favorites 
     const favoriteList = new List<Photo>(albumData.user.favorites ? albumData.user.favorites : undefined)
     if (isHasFavorites) {
       const currentFavoritePhotoQuery = favoriteList.Where(photo => photo ? photo.id === data.id : false)
