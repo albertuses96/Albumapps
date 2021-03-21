@@ -85,46 +85,70 @@ export const App = () => {
     base: 'min-h-screen w-full py-20 items-center justify-center'
   })
 
+  const StyledSearchContainer = nanostyled("div", {
+    base: "flex flex-row w-full justify-center mb-4"
+  })
+
+  const StyledInput = nanostyled("input",  {
+    base: 'mr-2 py-2 px-4 border-1 border-red-200 w-64'
+  })
+
+  const StyledButtonSearchCTA = nanostyled("button", {
+    base: 'bg-red-600 py-2 text-white px-4'
+  })
+
+  const StyledContentWrapper = ps("div")({
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    margin: '0 auto'
+  })
+
+  const StyledShimmer = nanostyled("div", {
+    base: ' flex flex-col justify-center items-centers mr-8'
+  })
+
+  const StyledBasefflineIndicator = nanostyled("div", {
+    base: 'w-full justify-center'
+  })
+
+  const StyledOfflineIndicator = ps(StyledBasefflineIndicator)({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  })
 
   return (
     <StyledContainer>
-      <div className="flex flex-row w-full justify-center mb-4"> 
-        <input 
+      <StyledSearchContainer> 
+        <StyledInput
           id="album-name" 
           key={Math.random()} 
           onChange={handleChangeAlbumsNameQuery} 
           defaultValue={albumNameQuery} 
           type="text" 
           placeholder="Search by album's name" 
-          className="mr-2 py-2 px-4 border-1 border-red-200 w-64"
         />
-         <input 
+         <StyledInput
           id="user-name" 
           key={Math.random()} 
           onChange={handleChangeUsernameQuery} 
           defaultValue={usernameQuery} 
           type="text" 
           placeholder="Search by user's names" 
-          className="mr-2 py-2 px-4 border-1 border-red-200 w-64npm install @yisheng90/react-loading --save"
         />
-        <button 
-          className="bg-red-600 py-2 text-white px-4" 
+        <StyledButtonSearchCTA
           onClick={() => {
           handleSearch()
           }}
         >
           Submit
-        </button>
-      </div>
+        </StyledButtonSearchCTA>
+      </StyledSearchContainer>
       <div>
         <Online>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            margin: '0 auto'
-          }}>
+          <StyledContentWrapper>
             {
               albumStore.albums ? albumStore.albums.map((albumData: AlbumData) => {
                 return (
@@ -144,11 +168,11 @@ export const App = () => {
                   </Link>
                 )
               }) : (
-              <>
+              <React.Fragment>
                 {
                   new Array(4).fill(0).map((_, index) => {
                     return (
-                    <div key={index} className="flex flex-col justify-center items-centers mr-8">
+                    <StyledShimmer key={index}>
                       <div style={{
                         width: '150px',
                         height: '150px'
@@ -163,23 +187,19 @@ export const App = () => {
                           <Skeleton width={100} />
                         </div>
                       </div>
-                    </div>
+                    </StyledShimmer>
                     )
                   })
                 }
-              </>
+              </React.Fragment>
               )
             }
-          </div>
+          </StyledContentWrapper>
         </Online>
         <Offline>
-          <div className="w-full justify-center" style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center'
-          }}>
+          <StyledOfflineIndicator>
             It seems you are offline. Please check your internet connection and retry again
-          </div>
+          </StyledOfflineIndicator>
         </Offline>
       </div>
     </StyledContainer>

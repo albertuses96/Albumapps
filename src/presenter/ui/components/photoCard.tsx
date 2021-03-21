@@ -1,6 +1,10 @@
 import * as React from 'react'
 import clsx from 'clsx'
 import { Photo } from '../../../domain/photo'
+import nanostyled from 'nanostyled'
+import picostyle from 'picostyle-react'
+
+const ps = picostyle(React.createElement)
 
 interface PhotoCardProps {
   data: Photo,
@@ -27,81 +31,103 @@ export default function PhotoCard({
   handleSaveComment,
   withComment
 }: PhotoCardProps) {
+  const StyledContainer = nanostyled("div", {
+    base: 'flex flex-col w-64 mr-8 mb-8'
+  })
+  
+  const StyledWrapper = nanostyled("div", {
+    base: 'flex flex-row justify-between items-center'
+  })
+
+  const StyledCommentButton = nanostyled("div", {
+    base: 'py-2 px-4 rounded bg-blue-600 text-white'
+  })
+
+  const StyledCommentInput = nanostyled("textarea", {
+    base: 'w-64 rounded px-4 py-4 border border-blue-600 mb-4'
+  })
+
+  const StyledButtonWrapper = nanostyled("div", {
+    base: 'flex flex-row justify-between'
+  })
+
+  const StyledCTAButton = nanostyled("div", {
+    color: "border border-blue-600 text-blue-600",
+    base: "px-4 py-2 border"
+  })
   return (
-    <div className="flex flex-col w-64 mr-8 mb-8" key={index}>
+  <StyledContainer key={index}>
     <img src={data.thumbnailUrl} alt="photo url" />
     <div>{data.title}</div>
     {
       withComment && (
-        <>
-        <div className="flex flex-row justify-between items-center">
-        <div className="mr-4">Comment: {comment ? comment : '' }</div>
-        <div>
-            <div 
-              className={clsx(isFavorite && "is_animating", "heart")} 
-              style={{
-                backgroundPosition: isFavorite ? 'right' : ''
-              }}
-              onClick={() => {
-                if (handleLikePhoto) {
-                  handleLikePhoto()
-                }
-              }}
-            >
+      <React.Fragment>
+        <StyledWrapper>
+          <div className="mr-4">Comment: {comment ? comment : '' }</div>
+            <div>
+              <div 
+                className={clsx(isFavorite && "is_animating", "heart")} 
+                style={{
+                  backgroundPosition: isFavorite ? 'right' : ''
+                }}
+                onClick={() => {
+                  if (handleLikePhoto) {
+                    handleLikePhoto()
+                  }
+                }}
+              >
+              </div>
             </div>
-          </div>
-        </div>
+        </StyledWrapper>
         {
           !isEdit ? (
-            <button 
+            <StyledCommentButton
               onClick={() => {
                 if (setEdit) {
                   setEdit(true)
                 }
               }} 
-              className="py-2 px-4 rounded bg-blue-600 text-white"
+         
             >
               Comment
-            </button>
+            </StyledCommentButton>
           ) : (
-            <>
-              <textarea 
+            <React.Fragment>
+              <StyledCommentInput
                 onChange={(e: any) => {
                   if (setComment) {
                     setComment(e.target.value)
                   }
                 }}
                 value={comment}
-                className="w-64 rounded px-4 py-4 border border-blue-600 mb-4"
               >
-              </textarea>
-              <div className="flex flex-row justify-between">
-              <button  
-                className="px-4 py-2 border border-blue-600 text-blue-600" 
-                onClick={() => {
-                  if (setEdit) {
-                    setEdit(false)
-                  }
-                }}
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={() => {
-                  if (handleSaveComment) {
-                    handleSaveComment()
-                  }
-                }} 
-                className="px-4 py-2 bg-blue-600 text-white">
-                Save
-              </button>
-              </div>
-            </>
+              </StyledCommentInput>
+              <StyledButtonWrapper>
+                <StyledCTAButton
+                  onClick={() => {
+                    if (setEdit) {
+                      setEdit(false)
+                    }
+                  }}
+                >
+                  Cancel
+                </StyledCTAButton>
+                <StyledCTAButton
+                  onClick={() => {
+                    if (handleSaveComment) {
+                      handleSaveComment()
+                    }
+                  }} 
+                  color="bg-blue-600 text-white">
+                  Save
+                </StyledCTAButton>
+              </StyledButtonWrapper>
+            </React.Fragment>
           )
         }
-        </>
+      </React.Fragment>
       )
     }
-  </div>
+  </StyledContainer>
   )
 }

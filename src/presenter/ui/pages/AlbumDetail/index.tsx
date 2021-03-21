@@ -7,6 +7,10 @@ import {List} from 'linqts'
 import PhotoCard from '../../components/photoCard'
 import { AlbumData } from '../../../../domain/album'
 import { LeftArrow } from '../../assets'
+import nanostyled from 'nanostyled'
+import picostyle from 'picostyle-react'
+
+const ps = picostyle(React.createElement)
 
 const PhotoItem: React.FC<{data: Photo, index: number, albumData: AlbumData, setAlbumData: Function}> = (props) => {
   const {data, index, albumData, setAlbumData} = props
@@ -113,13 +117,40 @@ export default function AlbumDetail() {
     }
   }, [])
 
+  const StyledAlbumContainer = nanostyled("div", {
+    base: 'flex flex-row px-4 flex-wrap justify-center'
+  })
+
+  const StyledBaseContainer = nanostyled("div", {
+    base: 'py-8',
+  })
+
+  const StyledContainer = ps(StyledBaseContainer)({
+    base: 'py-8 w-full'
+  })
+
+  const StyledHeader = nanostyled("div", {
+    base: 'flex flex-start w-full px-16'
+  })
+
+  const StyledTitle = nanostyled("div", {
+    base: 'w-full justify-center flex text-center mb-8'
+  })
+
+  const StyledUserName = nanostyled("div", {
+    base: 'w-full justify-center flex text-center mb-8 underline cursor-pointer'
+  })
+
+  const StyledPhotoContainer = nanostyled("div", {
+    base: 'w-full justify-center flex flex-row px-8'
+  })
 
   const renderAlbums = () => {
     return (
-      <div className="flex flex-row px-4 flex-wrap justify-center">
+      <StyledAlbumContainer>
         {
           albumData && (
-            <>
+            <React.Fragment>
               {
                 albumData
                     .photos
@@ -135,21 +166,16 @@ export default function AlbumDetail() {
                     )
                     })
               }
-            </>
+            </React.Fragment>
           )
         }
-      </div>
+      </StyledAlbumContainer>
     )
   }
 
   return (
-    <div 
-      className="py-8"
-      style={{
-        width: '100%'
-      }}
-    >
-      <div className="flex flex-start w-full px-16">
+    <StyledContainer>
+      <StyledHeader>
         <div className="w-8">
           <Link 
             to={{
@@ -159,8 +185,8 @@ export default function AlbumDetail() {
             <img src={LeftArrow} alt="back icon" />
           </Link>
         </div>
-      </div>
-      <div className="w-full justify-center flex text-center mb-8">
+      </StyledHeader>
+      <StyledTitle>
         { 
           location.state ? 
             location.state.albumData.title :   
@@ -169,10 +195,8 @@ export default function AlbumDetail() {
                 .albumData
                 .title
         }
-      </div>
-      <div 
-        className="w-full justify-center flex text-center mb-8 underline cursor-pointer"
-      >
+      </StyledTitle>
+      <StyledUserName>
         <Link 
           to={{
             pathname: 
@@ -206,10 +230,10 @@ export default function AlbumDetail() {
                   .name
           }
         </Link>
-      </div>
-      <div className="w-full justify-center flex flex-row px-8">
+      </StyledUserName>
+      <StyledPhotoContainer>
         {renderAlbums()}
-      </div>
-    </div>
+      </StyledPhotoContainer>
+    </StyledContainer>
   )
 }

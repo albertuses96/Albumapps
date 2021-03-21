@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom'
 import PhotoCard from '../../components/photoCard'
 import { Photo } from '../../../../domain/photo'
 import { LeftArrow } from '../../assets'
+import nanostyled from 'nanostyled'
 
 export default function UserDetail() {
   const location: any = useLocation()
@@ -21,7 +22,7 @@ export default function UserDetail() {
     if (!list || list.length <= 0) return null
 
     return (
-      <>
+      <React.Fragment>
         {
           list.map((photo, index) => {
             return (
@@ -33,13 +34,32 @@ export default function UserDetail() {
             )
           })
         }
-      </>
+      </React.Fragment>
     )
   }
 
+  const StyledContainer = nanostyled("div", {
+    base: 'flex flex-col py-8'
+  })
+
+  const StyledWrapper = nanostyled("div", {
+    base: 'flex flex-start w-full px-16'
+  })
+
+  const StyledFavoriteList = nanostyled("div", {
+    base: 'flex flex-col items-center justify-center'
+  })
+
+  const StyledFavoritePhoto = nanostyled("div", {
+    base: 'mt-8 flex flex-row'
+  })
+  
+  const StyledText = nanostyled('div', {
+    base: 'mb-4 mt-4 justify-center w-full flex text-center'
+  })
   return (
-    <div className="flex flex-col py-8">
-      <div className="flex flex-start w-full px-16">
+    <StyledContainer>
+      <StyledWrapper>
         <div className="w-8">
           <Link 
             to={{
@@ -52,8 +72,8 @@ export default function UserDetail() {
             <img src={LeftArrow} alt="back icon" />
           </Link>
         </div>
-      </div>
-      <div className="flex flex-col items-center justify-center">
+      </StyledWrapper>
+      <StyledFavoriteList>
         {
           !albumData ? 
             location
@@ -65,15 +85,16 @@ export default function UserDetail() {
               .user 
               .name
         }
-        <div className="mt-8 flex flex-row">
+        <StyledText>Your favorite photos;</StyledText>
+        <StyledFavoritePhoto>
           {
             !albumData ? 
               renderFavoriteList(location.state.albumData.user.favorites)
                 :
               renderFavoriteList(albumData.user.favorites)
           }
-        </div>
-      </div>
-    </div>
+        </StyledFavoritePhoto>
+      </StyledFavoriteList>
+    </StyledContainer>
   )
 }
