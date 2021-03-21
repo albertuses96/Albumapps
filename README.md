@@ -42,7 +42,7 @@ project
 
 ```
 
-Bundler: Parcel
-Styling: Tailwind CSS
-Persisting state: secured-ls
-Search: Fuzzy search
+- Bundler: Parcel
+- Styling: Tailwind CSS
+- Persist state: secured-ls
+- Search: Fuzzy search
