@@ -4,5 +4,12 @@ declare module global {
   }
 }
 
+declare module 'react-detect-offline'
+
+declare module "*.svg" {
+  const content: any;
+  export default content;
+}
+
 declare module 'nanostyled'
 declare module 'picostyle-react'

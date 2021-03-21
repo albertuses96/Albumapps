@@ -19,6 +19,8 @@ import picostyle from 'picostyle-react'
 import AlbumCard from "./components/albumCard";
 import { AlbumData } from "../../domain/album";
 import {Link} from 'react-router-dom'
+import { Offline, Online } from "react-detect-offline";
+import Skeleton from '@yisheng90/react-loading';
 
 const ps = picostyle(React.createElement)
 
@@ -79,11 +81,8 @@ export const App = () => {
     setUsernameQuery(e.target.value)
   }
 
-  const StyledBaseContainer = nanostyled("div", {
+  const StyledContainer = nanostyled("div", {
     base: 'min-h-screen w-full py-20 items-center justify-center'
-  })
-
-  const StyledContainer = ps(StyledBaseContainer)({
   })
 
 
@@ -97,7 +96,7 @@ export const App = () => {
           defaultValue={albumNameQuery} 
           type="text" 
           placeholder="Search by album's name" 
-          className="mr-2 py-2 px-4 border-1 border-red-200"
+          className="mr-2 py-2 px-4 border-1 border-red-200 w-64"
         />
          <input 
           id="user-name" 
@@ -106,7 +105,7 @@ export const App = () => {
           defaultValue={usernameQuery} 
           type="text" 
           placeholder="Search by user's names" 
-          className="mr-2 py-2 px-4 border-1 border-red-200"
+          className="mr-2 py-2 px-4 border-1 border-red-200 w-64npm install @yisheng90/react-loading --save"
         />
         <button 
           className="bg-red-600 py-2 text-white px-4" 
@@ -117,29 +116,71 @@ export const App = () => {
           Submit
         </button>
       </div>
-      <div className="flex flex-row flex-wrap justify-center" style={{
-        margin: '0 auto'
-      }}>
-      {
-        albumStore.albums && albumStore.albums.map((albumData: AlbumData) => {
-          return (
-            <Link 
-              to={{
-              pathname: `/album/${albumData.id}`,
-              state: {
-                albumData
-               }
-              }} 
-              key={albumData.id} 
-            >
-              <AlbumCard 
-                albumData={albumData} 
-                albumThumbnail={albumData.photos[0].thumbnailUrl}
-              />
-            </Link>
-          )
-        })
-      }
+      <div>
+        <Online>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            margin: '0 auto'
+          }}>
+            {
+              albumStore.albums ? albumStore.albums.map((albumData: AlbumData) => {
+                return (
+                  <Link 
+                    to={{
+                    pathname: `/album/${albumData.id}`,
+                    state: {
+                      albumData
+                    }
+                    }} 
+                    key={albumData.id} 
+                  >
+                    <AlbumCard 
+                      albumData={albumData} 
+                      albumThumbnail={albumData.photos[0].thumbnailUrl}
+                    />
+                  </Link>
+                )
+              }) : (
+              <>
+                {
+                  new Array(4).fill(0).map((_, index) => {
+                    return (
+                    <div key={index} className="flex flex-col justify-center items-centers mr-8">
+                      <div style={{
+                        width: '150px',
+                        height: '150px'
+                      }}>
+                        <Skeleton width={150} />
+                      </div>
+                      <div className="mt-4">              
+                        <div className="mb-4">
+                          <Skeleton width={120} />
+                        </div>
+                        <div className="mb-4">
+                          <Skeleton width={100} />
+                        </div>
+                      </div>
+                    </div>
+                    )
+                  })
+                }
+              </>
+              )
+            }
+          </div>
+        </Online>
+        <Offline>
+          <div className="w-full justify-center" style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}>
+            It seems you are offline. Please check your internet connection and retry again
+          </div>
+        </Offline>
       </div>
     </StyledContainer>
   );

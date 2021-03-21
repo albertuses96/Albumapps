@@ -4,16 +4,16 @@ import { Photo } from '../../../../domain/photo'
 import SecuredLs from '../../../../utils/securedLs'
 import {Link} from 'react-router-dom'
 import {List} from 'linqts'
-import clsx from 'clsx'
+import PhotoCard from '../../components/photoCard'
+import { AlbumData } from '../../../../domain/album'
+import { LeftArrow } from '../../assets'
 
-const PhotoItem: React.FC<{data: Photo, index: number}> = (props) => {
-  const {data, index} = props
+const PhotoItem: React.FC<{data: Photo, index: number, albumData: AlbumData, setAlbumData: Function}> = (props) => {
+  const {data, index, albumData, setAlbumData} = props
   const [isEdit, setEdit] = React.useState(false)
   const [comment, setComment] = React.useState(data.comment ? data.comment : '')
-  const albumData = SecuredLs.get('albumData')
-  const isHasFavorites = albumData.user.favorites ? new List<Photo>(albumData.user.favorties).Where(photo => photo ? photo.id === data.id : false).ToArray().length : false
+  const isHasFavorites = albumData ? albumData.user.favorites ? new List<Photo>(albumData.user.favorites).Where(photo => photo ? photo.id === data.id : false).ToArray().length > 0 : false : false
   const [isFavorite, setFavorite] = React.useState(isHasFavorites)
-
 
   const handleSaveComment = () =>  {
     const photos = albumData.photos
@@ -33,12 +33,13 @@ const PhotoItem: React.FC<{data: Photo, index: number}> = (props) => {
       photos: currentPhotos
     }
     SecuredLs.set('albumData', updatedAlbumData)
+    setAlbumData(updatedAlbumData)
     setEdit(false)
   }
 
   const handleLikePhoto = () => {
     const isHasFavorites = albumData.user.favorites 
-    const favoriteList = new List<Photo>(albumData.user.favorites)
+    const favoriteList = new List<Photo>(albumData.user.favorites ? albumData.user.favorites : undefined)
     if (isHasFavorites) {
       const currentFavoritePhotoQuery = favoriteList.Where(photo => photo ? photo.id === data.id : false)
       const remainsFavoritePhotoQuery = favoriteList.Where(photo => photo ? photo.id !== data.id : false)
@@ -48,9 +49,10 @@ const PhotoItem: React.FC<{data: Photo, index: number}> = (props) => {
           ...albumData,
           user: {
             ...albumData.user,
-            favorites: remainsFavoritePhotoQuery 
+            favorites: remainsFavoritePhotoQuery.ToArray()
           }
         }
+        setAlbumData(updatedAlbumData)
         SecuredLs.set('albumData', updatedAlbumData)
       } else {
         const updatedAlbumData = {
@@ -60,6 +62,7 @@ const PhotoItem: React.FC<{data: Photo, index: number}> = (props) => {
             favorites: [...remainsFavoritePhotoQuery.ToArray(), data]
           }
         }
+        setAlbumData(updatedAlbumData)
         SecuredLs.set('albumData', updatedAlbumData)
       }
     } else {
@@ -67,79 +70,47 @@ const PhotoItem: React.FC<{data: Photo, index: number}> = (props) => {
         ...albumData,
         user: {
           ...albumData.user,
-          favortites: [data]
+          favorites: [data]
         }
       }
+      setAlbumData(updatedAlbumData)
       SecuredLs.set('albumData', updatedAlbumData)
     }
     setFavorite(!isFavorite)
   }
 
   return (
-    <div className="flex flex-col w-64 mr-8 mb-8" key={index}>
-      <img src={data.thumbnailUrl} alt="photo url" />
-      <div>{data.title}</div>
-      <div className="flex flex-row justify-between items-center">
-        <div className="mr-4">Comment: {comment ? comment : '' }</div>
-        <div>
-          <div 
-            className={clsx(isFavorite && "is_animating", "heart")} 
-            style={{
-              backgroundPosition: isFavorite ? 'right' : ''
-            }}
-            onClick={() => {
-              handleLikePhoto()
-            }}
-          >
-          </div>
-        </div>
-      </div>
-      {
-        !isEdit ? (
-          <button 
-            onClick={() => {
-              setEdit(true)
-            }} 
-            className="py-2 px-4 rounded bg-blue-600 text-white"
-          >
-            Comment
-          </button>
-        ) : (
-          <>
-            <textarea 
-              onChange={(e: any) => {
-                setComment(e.target.value)
-              }}
-              value={comment}
-              className="w-64 rounded px-4 py-4 border border-blue-600 mb-4"
-            >
-            </textarea>
-            <div className="flex flex-row justify-between">
-            <button  className="px-4 py-2 border border-blue-600 text-blue-600" onClick={() => setEdit(false)}>Cancel</button>
-            <button onClick={() => handleSaveComment()} className="px-4 py-2 bg-blue-600 text-white">Save</button>
-            </div>
-          </>
-        )
-      }
+    <div key={index}>
+      <PhotoCard 
+        data={data}
+        index={index}
+        comment={comment}
+        isFavorite={isFavorite}
+        handleLikePhoto={handleLikePhoto}
+        isEdit={isEdit}
+        setComment={setComment}
+        handleSaveComment={handleSaveComment}
+        withComment={true}
+      />
     </div>
   )
 }
 
 export default function AlbumDetail() {
   const location: any = useLocation()
-  const [photos, setPhotos] = React.useState(null)
-  const albumData = SecuredLs.get('albumData')
+  const [albumData, setAlbumData] = React.useState<AlbumData | null>(null)
   
   React.useEffect(() => {
-    if (!albumData) {
+    const persistedAlbumData = SecuredLs.get('albumData')
+    if (!persistedAlbumData) {
       SecuredLs
         .set(
           'albumData', 
           location.state.albumData
         )
-      setPhotos(location.state.albumData.photos)
+      setAlbumData(location.state.albumData)
     } else {
-      setPhotos(albumData.photos)
+      setAlbumData(persistedAlbumData)
     }
   }, [])
 
@@ -148,37 +119,29 @@ export default function AlbumDetail() {
     return (
       <div className="flex flex-row px-4 flex-wrap justify-center">
         {
-          !albumData   ? (
-            location
-              .state
-              .albumData
-              .photos
-              .map((val: Photo, index: number) => {
-            return (
-              <PhotoItem
-                data={val}
-                index={index}
-                />
-              ) 
-            })
-          ) : (
-            albumData
-              .photos
-              .map((val: Photo, index: number) => {
-            return (
-              <PhotoItem
-                data={val}
-                index={index}
-                />
-              ) 
-            })
+          albumData && (
+            <>
+              {
+                albumData
+                    .photos
+                    .map((val: Photo, index: number) => {
+                    return (
+                    <PhotoItem
+                      data={val}
+                      index={index}
+                      key={index}
+                      albumData={albumData}
+                      setAlbumData={setAlbumData}
+                      />
+                    )
+                    })
+              }
+            </>
           )
         }
       </div>
     )
   }
-
-
 
   return (
     <div 
@@ -187,6 +150,17 @@ export default function AlbumDetail() {
         width: '100%'
       }}
     >
+      <div className="flex flex-start w-full px-16">
+        <div className="w-8">
+          <Link 
+            to={{
+              pathname: '/'
+            }}
+          >
+            <img src={LeftArrow} alt="back icon" />
+          </Link>
+        </div>
+      </div>
       <div className="w-full justify-center flex text-center mb-8">
         { 
           location.state ? 
@@ -217,14 +191,9 @@ export default function AlbumDetail() {
                     .id }`,
             state: {
               albumData: 
-                location
-                  .state ? 
-                location
-                  .state
-                  .albumData :   
                 SecuredLs
-                  .get('albumData')
-                  .albumData
+                .get('albumData')
+                .albumData
             }
           }}
         >
@@ -240,8 +209,7 @@ export default function AlbumDetail() {
         </Link>
       </div>
       <div className="w-full justify-center flex flex-row px-8">
-      
-          {renderAlbums()}
+        {renderAlbums()}
       </div>
     </div>
   )
