@@ -1,12 +1,48 @@
-# React / TypeScript / Tailwind / Parcel Starter
+# Technical test AccelByte Frontend
 
-Just clone the repo, update the dependencies, remove the old git repository, create a new, and your are ready to go!
+## Getting started: 
 
-```bash
-$ git clone git@github.com:oeb25/react-typescript-tailwind-parcel.git -o project-name
-$ cd project-name
-$ npm update
-$ rm -rf .git
-$ git init
-$ git commit -am 'first commit'
 ```
+  npm i
+  npm start
+```
+
+## Architecture: 
+
+```
+project
+│   README.md
+│   postcss.config.js
+|   purgecss.config.js
+|   tsconfig.json 
+│
+└───src
+    │   index.html
+    │   main.tsx
+    |   routes.tsx
+    |   styles.css
+    |   global.d.ts
+    │
+    └───domain  // contains entities
+    |
+    └───driver  // contains data source from remote or cache
+    |
+    └───interface 
+    |
+    └───presenter // UI layer
+    |
+    └───repository // data layer return from data source
+    |
+    └───useCase // Use case combines data from User and Post Repositories.
+    |
+    └───store // state management (react-sweet-state)
+    |
+    └───utils
+
+
+```
+
+Bundler: Parcel
+Styling: Tailwind CSS
+Persisting state: secured-ls
+Search: Fuzzy search
