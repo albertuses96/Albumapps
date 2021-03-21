@@ -7,7 +7,7 @@
     "start": "npm run tailwind:css && parcel src/index.html",
     "build": "npm run tailwind:css && parcel build src/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tailwind:css": "npx tailwindcss-cli@latest build -o src/index.css"
+    "tailwind:css": "npx tailwindcss-cli@latest build src/style.css -c tailwind.config.js -o src/index.css"
   },
   "keywords": [],
   "author": "",

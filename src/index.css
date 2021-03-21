@@ -31175,6 +31175,56 @@ video {
           animation: bounce 1s infinite;
 }
 
+@font-face {
+  font-family: "Roboto", sans-serif;
+
+  src: url("http://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic,900,900italic,300italic,300,100italic,100");
+}
+
+input {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.heart {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  background-image:url( 'https://abs.twimg.com/a/1446542199/img/t1/web_heart_animation.png');
+  background-position: left;
+  background-repeat:no-repeat;
+  background-size:2900%;
+}
+
+.heart:hover {
+  background-position:right;
+}
+
+.is_animating {
+  -webkit-animation: heart-burst .8s steps(28) 1;
+          animation: heart-burst .8s steps(28) 1;
+}
+
+@-webkit-keyframes heart-burst {
+  from {
+    background-position:left;
+  }
+
+  to { background-position:right;
+  }
+}
+
+@keyframes heart-burst {
+  from {
+    background-position:left;
+  }
+
+  to { background-position:right;
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
@@ -183909,4 +183959,3 @@ video {
             animation: bounce 1s infinite;
   }
 }
-  
