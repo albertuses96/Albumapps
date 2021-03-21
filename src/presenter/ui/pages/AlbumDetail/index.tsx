@@ -42,11 +42,13 @@ const PhotoItem: React.FC<{data: Photo, index: number, albumData: AlbumData, set
   }
 
   const handleLikePhoto = () => {
+    const hasFavorite = albumData.user.favorites
     const favoriteList = new List<Photo>(albumData.user.favorites ? albumData.user.favorites : undefined)
-    if (isHasFavorites) {
+    if (hasFavorite) {
       const currentFavoritePhotoQuery = favoriteList.Where(photo => photo ? photo.id === data.id : false)
       const remainsFavoritePhotoQuery = favoriteList.Where(photo => photo ? photo.id !== data.id : false)
       const isFavorited = currentFavoritePhotoQuery.ToArray().length > 0
+      
       if (isFavorited) {
         const updatedAlbumData = {
           ...albumData,
@@ -65,7 +67,6 @@ const PhotoItem: React.FC<{data: Photo, index: number, albumData: AlbumData, set
             favorites: [...remainsFavoritePhotoQuery.ToArray(), data]
           }
         }
-        setAlbumData(updatedAlbumData)
         SecuredLs.set('albumData', updatedAlbumData)
       }
     } else {
@@ -76,11 +77,16 @@ const PhotoItem: React.FC<{data: Photo, index: number, albumData: AlbumData, set
           favorites: [data]
         }
       }
+      console.log(data.id)
       setAlbumData(updatedAlbumData)
       SecuredLs.set('albumData', updatedAlbumData)
     }
     setFavorite(!isFavorite)
   }
+
+  React.useEffect(() => {
+  
+  }, [albumData])
 
   return (
     <div key={index}>
