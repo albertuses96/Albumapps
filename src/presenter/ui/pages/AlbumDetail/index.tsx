@@ -97,6 +97,7 @@ const PhotoItem: React.FC<{data: Photo, index: number, albumData: AlbumData, set
         isFavorite={isFavorite}
         handleLikePhoto={handleLikePhoto}
         isEdit={isEdit}
+        setEdit={setEdit}
         setComment={setComment}
         handleSaveComment={handleSaveComment}
         withComment={true}

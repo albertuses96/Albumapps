@@ -72,7 +72,6 @@ export const App = () => {
   }
 
   const handleChangeAlbumsNameQuery = (e: any) => {
-    e.preventDefault()
     setAlbumNameQuery(e.target.value)
   } 
 
@@ -124,18 +123,20 @@ export const App = () => {
       <StyledSearchContainer> 
         <StyledInput
           id="album-name" 
-          key={Math.random()} 
+          key={'search'} 
           onChange={handleChangeAlbumsNameQuery} 
-          defaultValue={albumNameQuery} 
+          value={albumNameQuery} 
           type="text" 
+          name="album-name"
           placeholder="Search by album's name" 
         />
          <StyledInput
           id="user-name" 
-          key={Math.random()} 
+          key={'search-user'} 
           onChange={handleChangeUsernameQuery} 
-          defaultValue={usernameQuery} 
+          value={usernameQuery} 
           type="text" 
+          name="search-user"
           placeholder="Search by user's names" 
         />
         <StyledButtonSearchCTA
